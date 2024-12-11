@@ -13,4 +13,4 @@ def save_data(data, filename):
         data.to_csv('../data/processed/' + filename + '.csv', index=False)
         print('Données sauvegardées avec succès.')
     except Exception as e:
-        raise ValueError('Erreur lors de la sauvegarde des données : {e}')
+        raise ValueError(f'Erreur lors de la sauvegarde des données : {e}')

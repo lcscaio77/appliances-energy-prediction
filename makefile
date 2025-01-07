@@ -13,7 +13,7 @@ ifeq ($(OS),Windows_NT)
 endif
 
 # Cible principale : installation du venv et des dépendances
-default: setup
+default: setup activate
 
 # Création de l'environnement virtuel
 $(VENV_DIR):

@@ -1,5 +1,19 @@
-from sklearn.model_selection import train_test_split
+import numpy as np
+import pandas as pd
+
 from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+
+def check_missing_values(data, columns=None, print_per_column=True):
+    if columns is None:
+        columns = data.columns
+
+    if print_per_column:
+        print('Valeurs manquantes par colonne :')
+        for col in columns:
+            print(f'{col} : {data[col].isna().sum()}')
+
+    print(f'Nombre total de valeurs manquantes : {data[columns].isna().sum().sum()}')
 
 def handle_missing_values(data, strategy='drop', columns=None):
     if columns is None:
@@ -15,7 +29,7 @@ def handle_missing_values(data, strategy='drop', columns=None):
         else:
             raise ValueError(f"Stratégie inconnue : {strategy}")
         
-    print(f'Nombre de valeurs manquantes : {data[columns].isna().sum().sum()}')
+    print(f'Nombre total de valeurs manquantes : {data[columns].isna().sum().sum()}')
     
     return data
 

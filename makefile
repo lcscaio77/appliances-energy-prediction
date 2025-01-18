@@ -1,45 +1,40 @@
-# Variables
-PYTHON := python3
-PIP := pip
-VENV_DIR := venv
-REQ_FILE := requirements.txt
-ACTIVATE := $(VENV_DIR)/bin/activate
+# Détection de l'OS
+UNAME_S := $(shell uname -s)
 
-# Détection du système d'exploitation
-ifeq ($(OS),Windows_NT)
-	PYTHON := python
-	PIP := pip
-	ACTIVATE := $(VENV_DIR)\\Scripts\\activate
+# Variables
+PYTHON=python3
+
+ifneq (,$(filter $(UNAME_S),Darwin Linux))
+    ACTIVATE_SCRIPT=venv/bin/activate
+else ifneq (,$(findstring CYGWIN $(UNAME_S) MINGW,$(UNAME_S)))
+    ACTIVATE_SCRIPT=venv/Scripts/activate
+else
+    $(error "OS non supporté pour ce Makefile")
 endif
 
-# Cible principale : installation du venv et des dépendances
-default: setup activate
+.PHONY: all setup activate clean
 
-# Création de l'environnement virtuel
-$(VENV_DIR):
-	@echo "Création de l'environnement virtuel dans $(VENV_DIR)"
-	$(PYTHON) -m venv $(VENV_DIR)
+# Règle principale
+all: setup
+	@echo "Configuration terminée ! Pour activer l'environnement virtuel, tapez :\nsource $(ACTIVATE_SCRIPT)"
 
-# Installation des dépendances
-install: $(VENV_DIR)
-	@echo "Installation des dépendances depuis $(REQ_FILE)"
-	$(VENV_DIR)/bin/$(PIP) install -r $(REQ_FILE) || $(VENV_DIR)\\Scripts\\$(PIP) install -r $(REQ_FILE)
+# Création et configuration de l'environnement virtuel
+setup:
+	@echo "Détection de l'OS : $(UNAME_S)"
+	$(PYTHON) -m venv venv
+	@echo "Environnement virtuel créé."
+	@echo "Mise à jour de pip..."
+	venv/bin/pip install --upgrade pip
+	@echo "Installation des dépendances..."
+	venv/bin/pip install -r requirements.txt
+	@echo "Installation des dépendances terminée."
 
 # Activation de l'environnement virtuel
-activate: $(VENV_DIR)
-	@echo "Pour activer le venv, exécutez :"
-ifeq ($(OS),Windows_NT)
-	@echo "    .\\$(VENV_DIR)\\Scripts\\activate"
-else
-	@echo "    source $(ACTIVATE)"
-endif
-
-# Configuration complète : venv + dépendances
-setup: $(VENV_DIR) install
+activate:
+	@echo "Pour activer l'environnement virtuel, tapez :\nsource $(ACTIVATE_SCRIPT)"
 
 # Nettoyage
 clean:
-	@echo "Suppression de l'environnement virtuel $(VENV_DIR)"
-	@rm -rf $(VENV_DIR)
-
-.PHONY: default setup install activate clean
+	@echo "Suppression de l'environnement virtuel..."
+	rm -rf venv
+	@echo "Nettoyage terminé."

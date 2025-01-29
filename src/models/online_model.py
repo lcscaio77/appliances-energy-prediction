@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 # Imports des métriques
-from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error, root_mean_squared_error
+from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error
 
 
 def check_model_module(model):
@@ -51,7 +51,7 @@ def model_forecast(model, X):
 def compute_metrics(y_true, y_pred):
     return {
         'MSE': mean_squared_error(y_true, y_pred),
-        'RMSE': root_mean_squared_error(y_true, y_pred),
+        'RMSE': mean_squared_error(y_true, y_pred, squared=False),
         'MAE': mean_absolute_error(y_true, y_pred),
         'MAPE': mean_absolute_percentage_error(y_true, y_pred)
     }
@@ -99,7 +99,7 @@ def online_window_fit(forecast_model, residual_model, X, y, window_size, step_si
 
     metrics = pd.DataFrame([{
         'MSE': mean_squared_error(true_values, predictions),
-        'RMSE': root_mean_squared_error(true_values, predictions),
+        'RMSE': mean_squared_error(true_values, predictions, squared=False),
         'MAE': mean_absolute_error(true_values, predictions),
         'MAPE': mean_absolute_percentage_error(true_values, predictions)
     }])

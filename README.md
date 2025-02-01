@@ -1,4 +1,4 @@
-# flight-status-prediction
+# appliances-energy-prediction
 
 -> https://archive.ics.uci.edu/dataset/374/appliances+energy+prediction
 
